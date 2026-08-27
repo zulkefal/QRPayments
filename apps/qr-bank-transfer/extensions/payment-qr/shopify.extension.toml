@@ -12,3 +12,9 @@ target = "purchase.thank-you.block.render"
 
 [extensions.capabilities]
 api_access = true
+
+# The merchant's bank details, published to a shop metafield when they save
+# settings in the app. Read directly so the page needs no network call.
+[[extensions.metafields]]
+namespace = "$app"
+key = "bank_settings"
