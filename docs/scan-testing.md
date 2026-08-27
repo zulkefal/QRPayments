@@ -65,11 +65,30 @@ the working code paid a UBL account, the failing one a NayaPay account.
 some banks and not others, and a same-bank success says nothing about
 cross-bank. Record both or the table misleads.
 
+## Decimals are dropped
+
+Observed 2026-08-27: an amount of `2970.38` reaches the bank app as `2970`. The
+fractional part does not survive.
+
+This is not cosmetic. A Shopify total of Rs 2,970.38 gets paid as Rs 2,970, so
+the merchant is short and the payment no longer equals the order total — which
+is exactly the match an automatic reconciliation would rely on.
+
+Two ways to settle it, both product decisions rather than bugs:
+
+- **Encode whole rupees** and show that same figure as the amount due, so the
+  shopper, the code, and the bank app all agree. The merchant absorbs the
+  difference, at most one rupee per order.
+- **Keep decimals** and accept that paid amounts will not match order totals,
+  which pushes the problem into reconciliation.
+
+Until this is decided the encoder keeps two decimals, matching the order total
+rather than what the apps do with it.
+
 ## Open question: the amount field
 
-NayaPay reads the IBAN but drops the amount, while Easypaisa and JazzCash carry
-it. Whether that is the decimal point, the field itself, or the value is still
-unknown.
+NayaPay reads the IBAN but drops the amount entirely, while Easypaisa and
+JazzCash carry it.
 
 `examples/diagnose.js` generates six codes differing one variable at a time:
 
