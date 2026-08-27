@@ -5,3 +5,5 @@ export { encodeField, decodeFields } from "./tlv.js";
 export { crc16 } from "./crc.js";
 export { renderPng, renderSvg, DEFAULT_STYLE } from "./render.js";
 export { toSvgPath } from "./matrix.js";
+export { suggestBank, knownBankCodes } from "./banks.js";
+export { validateSettings } from "./settings.js";
