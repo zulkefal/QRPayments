@@ -52,9 +52,9 @@ function Extension() {
         */}
         <s-stack direction="block" gap="small-500">
           {settings.bankName ? (
-            <s-text color="subdued">{settings.bankName}</s-text>
+            <Field label="Bank name" value={settings.bankName} />
           ) : null}
-          <s-text type="strong">{settings.accountTitle}</s-text>
+          <Field label="Account title" value={settings.accountTitle} />
 
           {/*
             The IBAN is plain text, never inside the clipboard element — that
@@ -62,7 +62,7 @@ function Extension() {
             is a separate button pointed at it, so a broken copy affordance can
             never hide the number itself.
           */}
-          <s-text>{formatIban(settings.iban)}</s-text>
+          <Field label="IBAN" value={formatIban(settings.iban)} />
           <s-clipboard-item id="qrpay-iban" text={settings.iban} />
           <s-button command="--copy" commandFor="qrpay-iban" variant="secondary">
             Copy IBAN
@@ -101,6 +101,16 @@ function Extension() {
         )}
       </s-stack>
     </s-section>
+  );
+}
+
+/** A labelled detail, so a shopper knows what each value is before paying. */
+function Field({ label, value }) {
+  return (
+    <s-stack direction="inline" gap="small-300">
+      <s-text color="subdued">{label}:</s-text>
+      <s-text type="strong">{value}</s-text>
+    </s-stack>
   );
 }
 
