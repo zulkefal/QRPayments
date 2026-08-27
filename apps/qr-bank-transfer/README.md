@@ -235,3 +235,32 @@ Shopify:
 Internationalization:
 
 - [Internationalizing your app](https://shopify.dev/docs/apps/best-practices/internationalization/getting-started)
+
+## Database
+
+This app uses **Postgres**, not a SQLite file. Container filesystems are
+ephemeral on most hosts, so a file database loses every merchant's settings and
+access tokens on each redeploy.
+
+Set `DATABASE_URL` before running anything — see `.env.example`. For local work:
+
+```sh
+docker run --name qrpay-db -e POSTGRES_PASSWORD=devpass -p 5432:5432 -d postgres:16
+export DATABASE_URL="postgresql://postgres:devpass@localhost:5432/postgres"
+npx prisma migrate dev
+```
+
+A free hosted instance from neon.tech or supabase.com works too, and is quicker
+if you would rather not run Docker.
+
+## What is stored
+
+| Data | Where | Erased when |
+| --- | --- | --- |
+| Shopify access tokens | `Session` table | Uninstall, `shop/redact` |
+| Merchant IBAN, account title, bank | `ShopSettings` table | Uninstall, `shop/redact` |
+| A copy of the bank details | Shopify shop metafield | Removed with the app |
+
+Nothing about shoppers is stored. The `customers/redact` and
+`customers/data_request` webhooks acknowledge and return, because there is no
+shopper data to erase or hand back.
