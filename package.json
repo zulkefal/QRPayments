@@ -1,11 +1,15 @@
 {
   "name": "qrpayments",
   "private": true,
-  "workspaces": ["packages/*", "apps/*"],
+  "workspaces": [
+    "packages/*",
+    "apps/qr-service"
+  ],
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "qr": "npm run qr --workspace @qrpayments/raast-qr",
-    "qr-service": "npm start --workspace @qrpayments/qr-service"
+    "qr-service": "npm start --workspace @qrpayments/qr-service",
+    "shopify": "npm run dev --prefix apps/qr-bank-transfer"
   },
   "license": "MIT"
 }
