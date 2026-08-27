@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
-import { renderPng, renderSvg, PayloadError } from "@qrpayments/raast-qr";
+import { PayloadError } from "@qrpayments/raast-qr";
+import { renderPng, renderSvg } from "@qrpayments/raast-qr/render";
 
 const PORT = Number(process.env.PORT || 3000);
 

@@ -9,6 +9,10 @@
       "types": "./index.d.ts",
       "default": "./src/index.js"
     },
+    "./render": {
+      "types": "./render.d.ts",
+      "default": "./src/render.js"
+    },
     "./react": {
       "types": "./react.d.ts",
       "default": "./src/react.js"
@@ -17,6 +21,7 @@
   "files": [
     "src",
     "index.d.ts",
+    "render.d.ts",
     "react.d.ts"
   ],
   "scripts": {

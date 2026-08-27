@@ -18,3 +18,5 @@ export async function renderSvg({ iban, amount, expiry, style }) {
   const payload = buildPayload({ iban, amount, expiry });
   return QRCode.toString(payload, { ...DEFAULT_STYLE, ...style, type: "svg" });
 }
+
+export { toSvgPath } from "./matrix.js";

@@ -1,0 +1,11 @@
+**/node_modules
+**/build
+**/dist
+**/.react-router
+**/.shopify
+**/.env
+**/.env.*
+!**/.env.example
+.git
+qr-out
+**/*.sqlite

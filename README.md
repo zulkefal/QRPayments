@@ -41,6 +41,12 @@ Run the image service:
 npm run qr-service   # PORT defaults to 3000
 ```
 
+## Deployment
+
+The Shopify app ships as a container built from the repository root. See
+[docs/deployment.md](docs/deployment.md) for environment variables, the health
+check, and hosting notes.
+
 ## Status
 
 The payload format has no published specification and was verified empirically.

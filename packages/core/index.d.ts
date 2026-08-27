@@ -77,23 +77,6 @@ export function encodeField(tag: string, value: string | number): string;
 export function decodeFields(payload: string): PayloadField[];
 export function crc16(input: string): string;
 
-export interface QrStyle {
-  width?: number;
-  margin?: number;
-  errorCorrectionLevel?: "L" | "M" | "Q" | "H";
-  color?: { dark?: string; light?: string };
-}
-
-export const DEFAULT_STYLE: QrStyle;
-export function renderPng(options: PayloadOptions & { style?: QrStyle }): Promise<Buffer>;
-export function renderSvg(options: PayloadOptions & { style?: QrStyle }): Promise<string>;
-
-/** An SVG path for the code, plus the viewBox extent in modules. */
-export function toSvgPath(
-  payload: string,
-  options?: { errorCorrectionLevel?: "L" | "M" | "Q" | "H"; margin?: number }
-): { path: string; extent: number };
-
 export interface BankSuggestion {
   /** Empty when the bank code is not recognised. */
   name: string;

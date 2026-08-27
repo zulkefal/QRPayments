@@ -2,9 +2,10 @@
 // React Router app in TypeScript can import the package without friction.
 import {
   buildPayload, parsePayload, validateSettings, suggestBank,
-  isValidIban, normalizeAmount, PayloadError, renderPng, toSvgPath,
+  isValidIban, normalizeAmount, PayloadError,
   type MerchantSettings, type ParsedPayload, type SettingsResult,
 } from "@qrpayments/raast-qr";
+import { renderPng, toSvgPath } from "@qrpayments/raast-qr/render";
 import { PaymentQR, formatIban, usePaymentQr } from "@qrpayments/raast-qr/react";
 import { createElement } from "react";
 
