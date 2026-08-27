@@ -1,5 +1,5 @@
 import QRCode from "qrcode";
-import { buildPayload } from "../src/index.js";
+import { buildPayload } from "./index.js";
 
 /** Dark green reads as "paid" locally and keeps contrast high against white. */
 export const DEFAULT_STYLE = {

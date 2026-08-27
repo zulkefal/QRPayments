@@ -1,0 +1,42 @@
+{
+  "name": "@qrpayments/raast-qr",
+  "version": "0.1.0",
+  "description": "Generate Pakistani bank-transfer payment QR codes from an IBAN and amount.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./react": "./src/react.js"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "qr": "node examples/generate.js"
+  },
+  "keywords": [
+    "pakistan",
+    "raast",
+    "iban",
+    "qr",
+    "payments",
+    "shopify"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
+}

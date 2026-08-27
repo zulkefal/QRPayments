@@ -10,7 +10,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import QRCode from "qrcode";
 import { buildPayload, parsePayload, bankCode, normalizeIban } from "../src/index.js";
-import { DEFAULT_STYLE } from "../server/render.js";
+import { DEFAULT_STYLE } from "../src/render.js";
 
 const [iban, ...amounts] = process.argv.slice(2);
 
@@ -20,7 +20,7 @@ if (!iban) {
   process.exit(1);
 }
 
-const outDir = resolve(import.meta.dirname, "..", "qr-out");
+const outDir = resolve(import.meta.dirname, "..", "..", "..", "qr-out");
 mkdirSync(outDir, { recursive: true });
 
 // no amount given still deserves a code — that is the static "any amount" case
