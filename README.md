@@ -59,6 +59,19 @@ The layout lives in `TAG` in [src/payload.js](src/payload.js).
 Expiry is only a field in the payload — enforcing it is up to the scanning app,
 and some ignore it. Do not treat it as a security control.
 
+## Generating test codes
+
+```sh
+node examples/generate.js PK51UNIL0109000262456845 100 2500.50
+```
+
+Writes one PNG per amount into `qr-out/`, named `<bank>-<last4>-<amount>.png`.
+Omit the amounts for a static "any amount" code. The folder is gitignored, so
+test codes never reach the repo.
+
+Scan what it produces, then record the outcome in
+[docs/scan-testing.md](docs/scan-testing.md).
+
 ## QR image service
 
 Shopify checkout UI extensions cannot draw a QR code themselves, so they point an

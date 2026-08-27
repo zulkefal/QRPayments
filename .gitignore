@@ -4,4 +4,7 @@ dist/
 .env
 .env.*
 .DS_Store
-*.png
+
+# generated test QR codes — keep the folder, ignore its contents
+qr-out/*
+!qr-out/.gitkeep
