@@ -13,7 +13,7 @@ The core library has no dependencies and makes no network calls.
 import { buildPayload } from "@qrpayments/raast-qr";
 
 buildPayload({ iban: "PK51UNIL0109000262456845", amount: "2500.00" });
-// "000202010212020200042 4PK51UNIL0109000262456845050 72500.00..."
+// "0002020102120202000424PK51UNIL010900026245684505072500.0007122808202623591004B47F"
 ```
 
 Render it with any QR library:

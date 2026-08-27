@@ -85,3 +85,33 @@ test("every field length matches its value", () => {
     assert.equal(f.value.length, f.length, `tag ${f.tag}`);
   }
 });
+
+/**
+ * Cross-checked against the payloads asserted by sendkardo-qr's own tests
+ * (github.com/umr13/sendkardo-qr, MIT). Independent implementation, same wire
+ * format — these pin compatibility so a refactor cannot silently drift.
+ */
+test("reproduces upstream reference vectors", () => {
+  const REF = "PK33ABCD0000000000000000";
+
+  assert.equal(
+    buildPayload({ iban: REF }),
+    "0002020102110202000424PK33ABCD00000000000000001004BA20"
+  );
+  assert.equal(
+    buildPayload({ iban: REF, amount: "500", expiry: "2026-12-31" }),
+    "0002020102120202000424PK33ABCD0000000000000000050350007123112202623591004EC99"
+  );
+  assert.equal(
+    buildPayload({ iban: REF, amount: "5,000.50", expiry: "2026-12-31T18:30" }),
+    "0002020102120202000424PK33ABCD000000000000000005075000.50071231122026183010041E4C"
+  );
+});
+
+test("verified-scanning payload stays byte-stable", () => {
+  // this exact payload was scanned successfully by UBL Digital on 2026-08-27
+  assert.equal(
+    buildPayload({ iban: "PK51UNIL0109000262456845", amount: 100, now: new Date("2026-08-27T12:00:00") }),
+    "0002020102120202000424PK51UNIL010900026245684505031000712280820262359100414E2"
+  );
+});
