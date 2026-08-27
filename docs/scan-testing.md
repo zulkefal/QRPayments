@@ -30,7 +30,7 @@ unverified until someone here scans it.
 
 | App | Version | Date tested | Result | Notes |
 | --- | --- | --- | --- | --- |
-| UBL Digital | | 2026-08-27 | **works** | Account and amount both prefilled |
+| UBL Digital | | 2026-08-27 | **partial** | Reads IBAN, then errors. Accepted amount `100` earlier but not `2970.38` — decimals are the suspect |
 | HBL | | | untested | Competitor headlines this one specifically |
 | Meezan | | | untested | |
 | MCB | | | untested | |
@@ -46,14 +46,29 @@ unverified until someone here scans it.
 
 | App | Version | Date tested | Result | Notes |
 | --- | --- | --- | --- | --- |
-| Easypaisa | | | untested | |
-| JazzCash | | | untested | |
-| NayaPay | | | untested | |
+| Easypaisa | | 2026-08-27 | **works** | IBAN and amount both read |
+| JazzCash | | 2026-08-27 | **works** | IBAN and amount both read |
+| NayaPay | | 2026-08-27 | **partial** | Reads IBAN, does not carry the amount — shopper types it |
 | SadaPay | | | untested | |
 | Zindigi | | | untested | |
 | HBL Konnect | | | untested | |
 | UPaisa | | | untested | |
 | Alfa | | | untested | |
+
+## Open question: the amount field
+
+Three of the first four apps disagree about the amount. Easypaisa and JazzCash
+read it, NayaPay ignores it, and UBL accepted `100` but errors on `2970.38`.
+The only difference between those two payloads is the decimal point.
+
+`examples/diagnose.js` generates six codes differing one variable at a time to
+settle it:
+
+```sh
+node packages/core/examples/diagnose.js <IBAN>
+```
+
+Scan all six with the failing app. Which one first fails names the field.
 
 ## Why this matters commercially
 
