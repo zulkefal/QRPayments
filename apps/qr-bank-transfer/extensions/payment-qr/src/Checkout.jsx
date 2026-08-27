@@ -11,12 +11,12 @@ function Extension() {
   const settings = readSettings(entries);
 
   if (!settings) {
-    // visible on purpose while we confirm shop metafields reach the extension
-    return (
+    // shoppers cannot act on this; merchants editing the page can
+    return shopify.extension?.editor ? (
       <s-banner heading="Bank transfer" tone="warning">
-        Bank details are not set up yet. ({entries.length} metafields visible)
+        Add your bank account in the app to show a payment code here.
       </s-banner>
-    );
+    ) : null;
   }
 
   const total = shopify.cost?.totalAmount?.value;
@@ -44,37 +44,61 @@ function Extension() {
   return (
     <s-section heading="Pay by bank transfer">
       <s-stack direction="block" gap="base">
+        {/*
+          Account details come before the code. A shopper's bank app shows the
+          recipient name on the transfer screen, and if it does not match what
+          they expected, they abandon the payment. Let them confirm who they
+          are paying first, then scan.
+        */}
+        <s-stack direction="block" gap="small-500">
+          {settings.bankName ? (
+            <s-text color="subdued">{settings.bankName}</s-text>
+          ) : null}
+          <s-text type="strong">{settings.accountTitle}</s-text>
+
+          {/*
+            The IBAN is plain text, never inside the clipboard element — that
+            element takes no children and swallows anything nested in it. Copy
+            is a separate button pointed at it, so a broken copy affordance can
+            never hide the number itself.
+          */}
+          <s-text>{formatIban(settings.iban)}</s-text>
+          <s-clipboard-item id="qrpay-iban" text={settings.iban} />
+          <s-button command="--copy" commandFor="qrpay-iban" variant="secondary">
+            Copy IBAN
+          </s-button>
+        </s-stack>
+
+        {amount ? (
+          <s-text type="strong">Rs {amount}</s-text>
+        ) : null}
+
+        <s-divider />
+
         {payload ? (
           <>
             <s-paragraph>
               Scan this with your banking app. The account and amount are filled
               in for you.
             </s-paragraph>
-            <s-qr-code
-              content={payload}
-              size="base"
-              border="base"
-              accessibilityLabel={
-                amount
-                  ? `Payment QR code for Rs ${amount}`
-                  : "Payment QR code for this order"
-              }
-            />
-            {amount ? <s-text type="strong">Rs {amount}</s-text> : null}
-            <s-divider />
-            <s-paragraph>Or transfer manually:</s-paragraph>
+            <s-box inlineSize="100%" maxInlineSize="340px">
+              <s-qr-code
+                content={payload}
+                size="fill"
+                border="base"
+                accessibilityLabel={
+                  amount
+                    ? `Payment QR code for Rs ${amount}`
+                    : "Payment QR code for this order"
+                }
+              />
+            </s-box>
           </>
         ) : (
-          <s-paragraph>Transfer this amount to the account below:</s-paragraph>
+          <s-paragraph>
+            Transfer this amount to the account above from your banking app.
+          </s-paragraph>
         )}
-
-        <s-stack direction="block" gap="small-500">
-          {settings.bankName ? <s-text>{settings.bankName}</s-text> : null}
-          <s-text type="strong">{settings.accountTitle}</s-text>
-          <s-clipboard-item text={settings.iban}>
-            <s-text>{formatIban(settings.iban)}</s-text>
-          </s-clipboard-item>
-        </s-stack>
       </s-stack>
     </s-section>
   );
