@@ -1,21 +1,20 @@
 api_version = "2026-07"
 
 [[extensions]]
-type = "ui_extension"
 name = "Bank transfer QR"
 handle = "payment-qr"
-uid = "06663788-861c-29d7-ad35-abfac915ba06fa381bf2"
+type = "ui_extension"
 
-  # The thank-you page, not the checkout page. Checkout page extensions need
-  # Shopify Plus, which almost no Pakistani merchant has. The total is also
-  # final here — shipping and tax are settled — so the amount in the code is
-  # exactly what the shopper owes.
-  [[extensions.targeting]]
-  target = "purchase.thank-you.block.render"
-  module = "./src/ThankYou.jsx"
+# The thank-you page, not the checkout page. Checkout extensions need Shopify
+# Plus, and an order must exist before we ask anyone to send money — a shopper
+# who leaves to open their banking app never returns to place it.
+[[extensions.targeting]]
+module = "./src/ThankYou.jsx"
+target = "purchase.thank-you.block.render"
 
-  # The merchant's bank details, saved in the app and published to a shop
-  # metafield. Read directly so the page needs no network call.
-  [[extensions.metafields]]
-  namespace = "$app"
-  key = "bank_settings"
+[extensions.capabilities]
+api_access = true
+
+[[extensions.metafields]]
+namespace = "$app"
+key = "bank_settings"
