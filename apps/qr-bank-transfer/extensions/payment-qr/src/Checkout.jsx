@@ -1,6 +1,11 @@
 import "@shopify/ui-extensions/preact";
 import { render } from "preact";
-import { buildPayload, formatIban, PayloadError } from "@qrpayments/raast-qr";
+import {
+  buildPayload,
+  formatIban,
+  toWholeRupees,
+  PayloadError,
+} from "@qrpayments/raast-qr";
 
 export default async () => {
   render(<Extension />, document.body);
@@ -25,11 +30,12 @@ function Extension() {
   // in another currency would tell the shopper to send the wrong amount
   const wrongCurrency = total?.currencyCode && total.currencyCode !== "PKR";
 
-  // Money.amount is a number, so it can carry float noise. Two decimals is
-  // both what the payload accepts and what a bank app expects.
+  // Whole rupees, rounded down. Bank apps drop the fractional part and UBL
+  // errors on it outright, so an order of 2,970.38 is asked for as 2,970 — the
+  // shopper sees that same figure below and is never charged above their total.
   const amount =
     !wrongCurrency && typeof total?.amount === "number"
-      ? total.amount.toFixed(2)
+      ? toWholeRupees(total.amount.toFixed(2)) || undefined
       : undefined;
 
   let payload = null;

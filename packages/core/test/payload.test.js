@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   buildPayload, parsePayload, defaultExpiry, PayloadError,
-  isValidIban, normalizeAmount, crc16, decodeFields,
+  isValidIban, normalizeAmount, toWholeRupees, crc16, decodeFields,
 } from "../src/index.js";
 
 const IBAN = "PK51UNIL0109000262456845";
@@ -114,4 +114,43 @@ test("verified-scanning payload stays byte-stable", () => {
     buildPayload({ iban: "PK51UNIL0109000262456845", amount: 100, now: new Date("2026-08-27T12:00:00") }),
     "0002020102120202000424PK51UNIL010900026245684505031000712280820262359100414E2"
   );
+});
+
+/**
+ * Bank apps drop or reject the fractional part of an amount: some ignore it,
+ * and UBL errors outright (observed 2026-08-27). Amounts must reach the code
+ * as whole rupees.
+ */
+test("rounds amounts down to whole rupees", () => {
+  assert.equal(toWholeRupees("2970.38"), "2970", "never more than the order total");
+  assert.equal(toWholeRupees("2970.99"), "2970", "not even when the fraction is large");
+  assert.equal(toWholeRupees("100.23"), "100");
+  assert.equal(toWholeRupees("2970.00"), "2970");
+  assert.equal(toWholeRupees("2970"), "2970", "whole amounts pass through");
+  assert.equal(toWholeRupees("5,000.50"), "5000", "commas are still forgiven");
+});
+
+test("a total under one rupee cannot be carried", () => {
+  // flooring would ask for zero, so no code is offered and the shopper pays
+  // against the account details instead
+  assert.equal(toWholeRupees("0.99"), null);
+  assert.equal(toWholeRupees("0.01"), null);
+});
+
+test("rounding rejects what normalizeAmount rejects", () => {
+  assert.equal(toWholeRupees(undefined), "", "omitted still means static");
+  assert.equal(toWholeRupees("0"), null);
+  assert.equal(toWholeRupees("-5"), null);
+  assert.equal(toWholeRupees("abc"), null);
+});
+
+test("a rounded amount encodes with no decimal point", () => {
+  const payload = buildPayload({
+    iban: "PK51UNIL0109000262456845",
+    amount: toWholeRupees("2970.38"),
+    now: new Date("2026-08-27T12:00:00"),
+  });
+  const parsed = parsePayload(payload);
+  assert.equal(parsed.amount, "2970");
+  assert.ok(!parsed.amount.includes("."), "no decimal point reaches a bank app");
 });

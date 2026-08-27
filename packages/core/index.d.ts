@@ -66,6 +66,13 @@ export function formatIban(value: unknown): string;
 /** Payload-ready amount, "" when omitted, or null when unusable. */
 export function normalizeAmount(value: unknown): string | null;
 
+/**
+ * Round down to whole rupees. Bank apps drop or reject the fractional part, so
+ * amounts must be whole. Never rounds up — a shopper is not asked for more than
+ * their order total. Show the result to the shopper as the amount due.
+ */
+export function toWholeRupees(value: unknown): string | null;
+
 export function encodeField(tag: string, value: string | number): string;
 export function decodeFields(payload: string): PayloadField[];
 export function crc16(input: string): string;

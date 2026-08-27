@@ -74,16 +74,18 @@ This is not cosmetic. A Shopify total of Rs 2,970.38 gets paid as Rs 2,970, so
 the merchant is short and the payment no longer equals the order total — which
 is exactly the match an automatic reconciliation would rely on.
 
-Two ways to settle it, both product decisions rather than bugs:
+**Settled 2026-08-27: amounts are whole rupees, rounded down.**
 
-- **Encode whole rupees** and show that same figure as the amount due, so the
-  shopper, the code, and the bank app all agree. The merchant absorbs the
-  difference, at most one rupee per order.
-- **Keep decimals** and accept that paid amounts will not match order totals,
-  which pushes the problem into reconciliation.
+`toWholeRupees` floors the total, so an order of Rs 2,970.38 asks for Rs 2,970.
+A shopper is never asked for more than they agreed to pay; the merchant gives up
+at most 0.99 per order, which is worth far less than a customer disputing a
+charge above their order total.
 
-Until this is decided the encoder keeps two decimals, matching the order total
-rather than what the apps do with it.
+The figure shown to the shopper is the same rounded figure encoded in the code —
+those must never disagree.
+
+A total below one rupee cannot be carried at all, since flooring it asks for
+nothing. No code is shown and the shopper pays against the account details.
 
 ## Open question: the amount field
 

@@ -32,7 +32,7 @@ const rows = [];
 for (const [name, iban] of BANKS) {
   if (!isValidIban(iban)) throw new Error(`invalid IBAN for ${name}`);
 
-  for (const [label, amount] of [["decimal", "100.23"], ["whole", "100"]]) {
+  for (const [label, amount] of [["100", "100"], ["2970", "2970"]]) {
     const payload = buildPayload({ iban, amount });
     const file = resolve(outDir, `${name}-${label}-${amount}.png`);
     await QRCode.toFile(file, payload, { ...DEFAULT_STYLE, width: 600 });
@@ -43,12 +43,12 @@ for (const [name, iban] of BANKS) {
 const index = [
   "# Bank scan test set",
   "",
-  "Two codes per bank: one with a decimal amount, one without. Scan both with",
-  "the same app and record what amount the app shows.",
+  "Two codes per bank, both whole rupees. Decimals are not used: bank apps drop",
+  "the fractional part and UBL errors on it, so amounts round up to whole rupees.",
   "",
-  "| Bank | Decimal (100.23) | Whole (100) |",
+  "| Bank | Rs 100 | Rs 2,970 |",
   "| --- | --- | --- |",
-  ...BANKS.map(([n]) => `| ${n} | \`${n}-decimal-100.23.png\` | \`${n}-whole-100.png\` |`),
+  ...BANKS.map(([n]) => `| ${n} | \`${n}-100-100.png\` | \`${n}-2970-2970.png\` |`),
   "",
   "What to record for each: the amount the app displays, or the error text.",
   "A result is the pair (scanning app, destination bank) — note both.",
