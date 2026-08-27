@@ -59,6 +59,23 @@ The layout lives in `TAG` in [src/payload.js](src/payload.js).
 Expiry is only a field in the payload — enforcing it is up to the scanning app,
 and some ignore it. Do not treat it as a security control.
 
+## QR image service
+
+Shopify checkout UI extensions cannot draw a QR code themselves, so they point an
+`<Image>` at this service.
+
+```sh
+node server/index.js          # PORT defaults to 3000
+```
+
+| Route | Returns |
+| --- | --- |
+| `GET /qr.png?iban=&amount=&expiry=&width=` | PNG, cached immutably |
+| `GET /qr.svg?...` | SVG, same parameters |
+| `GET /healthz` | `{"ok":true}` |
+
+Bad input returns 400 with `{ error, code }`.
+
 ## Tests
 
 ```sh
