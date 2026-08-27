@@ -4,6 +4,7 @@ api_version = "2026-07"
 type = "ui_extension"
 name = "Bank transfer QR"
 handle = "payment-qr"
+uid = "06663788-861c-29d7-ad35-abfac915ba06fa381bf2"
 
   # The thank-you page, not the checkout page. Checkout page extensions need
   # Shopify Plus, which almost no Pakistani merchant has. The total is also
