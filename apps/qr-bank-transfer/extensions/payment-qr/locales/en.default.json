@@ -1,0 +1,5 @@
+{
+  "heading": "Pay by bank transfer",
+  "scanInstruction": "Scan this with your banking app. The account and amount are filled in for you.",
+  "manualInstruction": "Or transfer manually:"
+}
