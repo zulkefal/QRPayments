@@ -25,19 +25,13 @@ api_version = "2026-10"
   uri = "/webhooks/app/scopes_update"
   topics = [ "app/scopes_update" ]
 
-  # Mandatory compliance topics. App Store review rejects submissions without
-  # them, and they are what actually erases a merchant's bank details.
-  [[webhooks.subscriptions]]
-  uri = "/webhooks/shop/redact"
-  topics = [ "shop/redact" ]
-
-  [[webhooks.subscriptions]]
-  uri = "/webhooks/customers/redact"
-  topics = [ "customers/redact" ]
-
-  [[webhooks.subscriptions]]
-  uri = "/webhooks/customers/data_request"
-  topics = [ "customers/data_request" ]
+  # Mandatory compliance endpoints. These are not ordinary subscriptions — they
+  # have their own section, and declaring them as topics is rejected outright.
+  # shop_deletion_url is what actually erases a merchant's bank details.
+  [webhooks.privacy_compliance]
+  customer_data_request_url = "/webhooks/customers/data_request"
+  customer_deletion_url = "/webhooks/customers/redact"
+  shop_deletion_url = "/webhooks/shop/redact"
 
 [auth]
 redirect_urls = [ "https://example.com/api/auth" ]
