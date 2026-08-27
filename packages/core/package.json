@@ -5,15 +5,24 @@
   "type": "module",
   "main": "src/index.js",
   "exports": {
-    ".": "./src/index.js",
-    "./react": "./src/react.js"
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./react": {
+      "types": "./react.d.ts",
+      "default": "./src/react.js"
+    }
   },
   "files": [
-    "src"
+    "src",
+    "index.d.ts",
+    "react.d.ts"
   ],
   "scripts": {
-    "test": "node --test test/*.test.js",
-    "qr": "node examples/generate.js"
+    "test": "node --test test/*.test.js && npm run typecheck",
+    "qr": "node examples/generate.js",
+    "typecheck": "tsc -p test-types/tsconfig.json"
   },
   "keywords": [
     "pakistan",
@@ -28,8 +37,11 @@
     "qrcode": "^1.5.4"
   },
   "devDependencies": {
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "typescript": "^7.0.2"
   },
   "peerDependencies": {
     "react": ">=18"
@@ -38,5 +50,6 @@
     "react": {
       "optional": true
     }
-  }
+  },
+  "types": "./index.d.ts"
 }
