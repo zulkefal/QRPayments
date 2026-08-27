@@ -60,6 +60,8 @@ export function isValidIban(value: unknown): boolean;
 export function normalizeIban(value: unknown): string;
 /** Four-letter bank code from an IBAN, or "" if it is not a valid PK IBAN. */
 export function bankCode(value: unknown): string;
+/** Groups an IBAN into fours for display. */
+export function formatIban(value: unknown): string;
 
 /** Payload-ready amount, "" when omitted, or null when unusable. */
 export function normalizeAmount(value: unknown): string | null;

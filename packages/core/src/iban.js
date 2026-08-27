@@ -35,3 +35,8 @@ export function bankCode(value) {
   const iban = normalizeIban(value);
   return PK_IBAN.test(iban) ? iban.slice(4, 8) : "";
 }
+
+/** Group an IBAN into fours so a human can read it back to their bank app. */
+export function formatIban(value) {
+  return normalizeIban(value).replace(/(.{4})/g, "$1 ").trim();
+}

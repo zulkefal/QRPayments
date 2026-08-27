@@ -7,7 +7,11 @@ import {
 } from "react-router";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
-import { getSettings, saveSettings } from "../models/settings.server";
+import {
+  getSettings,
+  publishSettings,
+  saveSettings,
+} from "../models/settings.server";
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
@@ -15,7 +19,7 @@ export const loader = async ({ request }) => {
 };
 
 export const action = async ({ request }) => {
-  const { session } = await authenticate.admin(request);
+  const { admin, session } = await authenticate.admin(request);
   const form = await request.formData();
 
   const result = await saveSettings(session.shop, {
@@ -24,9 +28,15 @@ export const action = async ({ request }) => {
     bankName: form.get("bankName"),
   });
 
+  // the extension reads a metafield, so saving is only half the job
+  const publishErrors = result.saved
+    ? await publishSettings(admin, result.settings)
+    : [];
+
   return {
     errors: result.errors,
     saved: Boolean(result.saved),
+    publishErrors,
     settings: result.settings,
     suggestedBank: result.suggestedBank,
   };
@@ -44,10 +54,18 @@ export default function SettingsPage() {
 
   return (
     <s-page heading="Bank transfer settings">
-      {result?.saved ? (
+      {result?.saved && !result.publishErrors?.length ? (
         <s-banner tone="success">
           Saved. Shoppers who choose bank transfer will see a QR code for this
           account.
+        </s-banner>
+      ) : null}
+
+      {result?.publishErrors?.length ? (
+        <s-banner tone="warning">
+          Your details were saved, but could not be sent to the checkout page:{" "}
+          {result.publishErrors.join(" ")} Shoppers will not see a QR code until
+          this is fixed.
         </s-banner>
       ) : null}
 

@@ -1,12 +1,9 @@
 import { createElement as h, useMemo, useState, useCallback } from "react";
 import { buildPayload, PayloadError } from "./payload.js";
-import { normalizeIban } from "./iban.js";
+import { formatIban, normalizeIban } from "./iban.js";
 import { toSvgPath } from "./matrix.js";
 
-/** Group an IBAN into fours so a human can read it back to their bank app. */
-export function formatIban(iban) {
-  return normalizeIban(iban).replace(/(.{4})/g, "$1 ").trim();
-}
+export { formatIban };
 
 /**
  * Build the code for a payment, reporting bad input rather than throwing.
