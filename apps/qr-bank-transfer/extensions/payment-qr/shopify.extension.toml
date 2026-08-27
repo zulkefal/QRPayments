@@ -3,12 +3,12 @@ api_version = "2026-07"
 [[extensions]]
 name = "Bank transfer QR"
 handle = "payment-qr"
-uid = "06663788-861c-29d7-ad35-abfac915ba06fa381bf2"
 type = "ui_extension"
+uid = "06663788-861c-29d7-ad35-abfac915ba06fa381bf2"
 
-# The thank-you page, not the checkout page. Checkout extensions need Shopify
-# Plus, and an order must exist before we ask anyone to send money — a shopper
-# who leaves to open their banking app never returns to place it.
 [[extensions.targeting]]
-module = "./src/ThankYou.jsx"
+module = "./src/Checkout.jsx"
 target = "purchase.thank-you.block.render"
+
+[extensions.capabilities]
+api_access = true
