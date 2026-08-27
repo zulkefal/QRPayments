@@ -30,7 +30,7 @@ unverified until someone here scans it.
 
 | App | Version | Date tested | Result | Notes |
 | --- | --- | --- | --- | --- |
-| UBL Digital | | 2026-08-27 | **partial** | Reads IBAN, then errors. Accepted amount `100` earlier but not `2970.38` — decimals are the suspect |
+| UBL Digital | | 2026-08-27 | **mixed** | Works to a **UBL** account. Errors to a **NayaPay** account — cross-bank routing, not the payload |
 | HBL | | | untested | Competitor headlines this one specifically |
 | Meezan | | | untested | |
 | MCB | | | untested | |
@@ -55,20 +55,30 @@ unverified until someone here scans it.
 | UPaisa | | | untested | |
 | Alfa | | | untested | |
 
+## Always record the destination bank, not just the scanning app
+
+The first UBL result looked like a payload regression: a code with amount `100`
+worked, one with `2970.38` errored. The real difference was the destination —
+the working code paid a UBL account, the failing one a NayaPay account.
+
+**A result is the pair (scanning app, destination bank).** One app may reach
+some banks and not others, and a same-bank success says nothing about
+cross-bank. Record both or the table misleads.
+
 ## Open question: the amount field
 
-Three of the first four apps disagree about the amount. Easypaisa and JazzCash
-read it, NayaPay ignores it, and UBL accepted `100` but errors on `2970.38`.
-The only difference between those two payloads is the decimal point.
+NayaPay reads the IBAN but drops the amount, while Easypaisa and JazzCash carry
+it. Whether that is the decimal point, the field itself, or the value is still
+unknown.
 
-`examples/diagnose.js` generates six codes differing one variable at a time to
-settle it:
+`examples/diagnose.js` generates six codes differing one variable at a time:
 
 ```sh
 node packages/core/examples/diagnose.js <IBAN>
 ```
 
-Scan all six with the failing app. Which one first fails names the field.
+Scan all six with **one app against one destination account**. The first that
+fails names the field.
 
 ## Why this matters commercially
 
