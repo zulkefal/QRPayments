@@ -5,7 +5,8 @@
   "type": "module",
   "main": "src/index.js",
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./react": "./src/react.js"
   },
   "files": [
     "src"
@@ -25,5 +26,17 @@
   "license": "MIT",
   "dependencies": {
     "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   }
 }

@@ -59,6 +59,48 @@ The layout lives in `TAG` in [src/payload.js](src/payload.js).
 Expiry is only a field in the payload — enforcing it is up to the scanning app,
 and some ignore it. Do not treat it as a security control.
 
+## React / Next.js
+
+```sh
+npm install @qrpayments/raast-qr
+```
+
+```jsx
+import { PaymentQR } from "@qrpayments/raast-qr/react";
+
+export default function BankTransfer({ order }) {
+  return (
+    <PaymentQR
+      iban="PK51UNIL0109000262456845"
+      amount={order.total}          // pass money as a string: "2500.00"
+      accountTitle="Quecko Pvt Ltd"
+      bankName="UBL"
+    />
+  );
+}
+```
+
+Renders the code, the amount, and the account details as copyable text. The text
+is not decoration — if a shopper's bank app cannot read the code, they can still
+pay by hand instead of abandoning the order.
+
+Ships without a build step and renders on the server, so it works in a Next.js
+server component as-is.
+
+| Export | Purpose |
+| --- | --- |
+| `PaymentQR` | Full checkout block: code, amount, account details, copy button |
+| `PaymentQRCode` | Just the code, as real SVG elements |
+| `usePaymentQr` | `{ path, extent, payload, error }` for a custom layout |
+| `formatIban` | Groups an IBAN into fours for display |
+
+Bad input never throws during render. `PaymentQRCode` renders nothing and
+`PaymentQR` shows a message; both report through `onError`. A shopper scanning
+a wrong code is worse than one who sees no code.
+
+Style it with the `qrpay`, `qrpay__amount`, `qrpay__details`, `qrpay__iban`,
+`qrpay__copy` and `qrpay__error` class names, or pass your own `className`.
+
 ## Generating test codes
 
 ```sh
