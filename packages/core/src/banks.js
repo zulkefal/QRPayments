@@ -8,6 +8,8 @@
  * merchant to confirm, and setup stores what the merchant confirmed.
  *
  * Add codes here only after seeing one on a real statement or bank app.
+ * ABPA, MCIB, MPBL, NAYA, SADA and TMFB were confirmed against real account
+ * numbers on 2026-08-27.
  */
 const BANKS = {
   UNIL: "United Bank Limited (UBL)",
@@ -24,6 +26,12 @@ const BANKS = {
   SONE: "Soneri Bank",
   BKIP: "BankIslami Pakistan",
   DUIB: "Dubai Islamic Bank Pakistan",
+  ABPA: "Allied Bank",
+  MCIB: "MCB Islamic Bank",
+  MPBL: "Habib Metropolitan Bank",
+  NAYA: "NayaPay",
+  SADA: "SadaPay",
+  TMFB: "Easypaisa (Telenor Microfinance Bank)",
 };
 
 /**
