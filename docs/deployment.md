@@ -1,7 +1,7 @@
 # Deployment
 
 The Shopify app is a container built from the **repository root**, not from
-`apps/qr-bank-transfer` — it imports `packages/core` through a `file:` reference,
+`shopify/` — it imports `core/` through a `file:` reference,
 so the image needs both directories in the same relative layout as the repo.
 
 ```sh
@@ -56,7 +56,7 @@ a merchant who cannot open the app cannot set it up.
 docker run --name qrpay-db -e POSTGRES_PASSWORD=devpass -p 5432:5432 -d postgres:16
 ```
 
-Then in `apps/qr-bank-transfer/.env`:
+Then in `shopify/.env`:
 
 ```
 DATABASE_URL="postgresql://postgres:devpass@localhost:5432/postgres"

@@ -20,7 +20,7 @@ if (!iban) {
   process.exit(1);
 }
 
-const outDir = resolve(import.meta.dirname, "..", "..", "..", "qr-out");
+const outDir = resolve(import.meta.dirname, "..", "..", "qr-out");
 mkdirSync(outDir, { recursive: true });
 
 // no amount given still deserves a code — that is the static "any amount" case

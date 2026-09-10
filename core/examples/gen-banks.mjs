@@ -1,8 +1,8 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import QRCode from "qrcode";
-import { buildPayload, parsePayload, isValidIban } from "/Users/macbookpro/Desktop/QRPayments/packages/core/src/index.js";
-import { DEFAULT_STYLE } from "/Users/macbookpro/Desktop/QRPayments/packages/core/src/render.js";
+import { buildPayload, parsePayload, isValidIban } from "../src/index.js";
+import { DEFAULT_STYLE } from "../src/render.js";
 
 const BANKS = [
   ["UBL", "PK51UNIL0109000262456845"],
@@ -25,7 +25,7 @@ const BANKS = [
   ["HabibMetro", "PK43MPBL9904177140407706"],
 ];
 
-const outDir = "/Users/macbookpro/Desktop/QRPayments/qr-out/banks";
+const outDir = resolve(import.meta.dirname, "..", "..", "qr-out", "banks");
 mkdirSync(outDir, { recursive: true });
 
 const rows = [];

@@ -6,14 +6,15 @@ their existing banking app instead of copying a 24-character IBAN by hand.
 ## Layout
 
 ```
-packages/core        payload library, React components, QR rendering
-apps/qr-service      HTTP service rendering QR images
+shopify/             the Shopify app and its checkout extension
+core/                payload library, React components, QR rendering
+standalone/          everything for stores not on Shopify
 ```
 
 | Workspace | Package | What it is |
 | --- | --- | --- |
-| `packages/core` | `@qrpayments/raast-qr` | The payload format, `<PaymentQR>` for React, PNG/SVG rendering. Public and MIT. |
-| `apps/qr-service` | `@qrpayments/qr-service` | Serves QR images to checkout surfaces that cannot draw one themselves. |
+| `core` | `@qrpayments/raast-qr` | The payload format, `<PaymentQR>` for React, PNG/SVG rendering. Public and MIT. |
+| `standalone/qr-service` | `@qrpayments/qr-service` | Serves QR images to checkout surfaces that cannot draw one themselves. |
 
 The core is deliberately open — a free competitor already gives the same
 generation away, so there is nothing to gain by hiding it. It is the on-ramp.

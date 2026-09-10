@@ -95,7 +95,7 @@ JazzCash carry it.
 `examples/diagnose.js` generates six codes differing one variable at a time:
 
 ```sh
-node packages/core/examples/diagnose.js <IBAN>
+node core/examples/diagnose.js <IBAN>
 ```
 
 Scan all six with **one app against one destination account**. The first that

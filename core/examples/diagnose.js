@@ -28,7 +28,7 @@ const CASES = [
   ["06-no-amount", {}, "static code, no amount field at all"],
 ];
 
-const outDir = resolve(import.meta.dirname, "..", "..", "..", "qr-out", "diagnose");
+const outDir = resolve(import.meta.dirname, "..", "..", "qr-out", "diagnose");
 mkdirSync(outDir, { recursive: true });
 
 for (const [name, options, why] of CASES) {
