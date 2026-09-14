@@ -1,18 +1,19 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "55fd096f2902670ee2434f7959236dc0"
+client_id = "0ae04134018844df44768c45958efaec"
+name = "Scan To Pay"
 application_url = "https://example.com"
 embedded = true
-name = "QR-BankTransfer"
 
 [access_scopes]
-# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 # A shopper-facing QR needs nothing from the Admin API. read_orders is here
 # for order-aware features (dashboard, marking orders paid) and is what a
 # merchant expects a payments app to ask for. Add nothing speculatively —
 # every extra permission on the install screen costs installs.
 scopes = "read_orders"
 
+[auth]
+redirect_urls = [ "https://example.com/api/auth" ]
 
 [webhooks]
 api_version = "2026-10"
@@ -32,9 +33,6 @@ api_version = "2026-10"
   customer_data_request_url = "/webhooks/customers/data_request"
   customer_deletion_url = "/webhooks/customers/redact"
   shop_deletion_url = "/webhooks/shop/redact"
-
-[auth]
-redirect_urls = [ "https://example.com/api/auth" ]
 
 [build]
 automatically_update_urls_on_dev = true

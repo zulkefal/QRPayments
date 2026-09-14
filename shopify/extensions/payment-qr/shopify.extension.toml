@@ -4,7 +4,6 @@ api_version = "2026-07"
 name = "Bank transfer QR"
 handle = "payment-qr"
 type = "ui_extension"
-uid = "06663788-861c-29d7-ad35-abfac915ba06fa381bf2"
 
 [[extensions.targeting]]
 module = "./src/Checkout.jsx"

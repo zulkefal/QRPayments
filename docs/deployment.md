@@ -13,7 +13,7 @@ docker build -t qrpay-app .
 | Variable | Where it comes from |
 | --- | --- |
 | `DATABASE_URL` | Your Postgres instance. Required. |
-| `SHOPIFY_API_KEY` | The app's client ID, in `shopify.app.toml` |
+| `SHOPIFY_API_KEY` | The app's client ID, in `shopify/shopify.app.scan-to-pay.toml` |
 | `SHOPIFY_API_SECRET` | Partner dashboard → app → API credentials |
 | `SHOPIFY_APP_URL` | The public HTTPS URL this deployment serves on |
 | `SCOPES` | `read_orders` |
@@ -34,7 +34,7 @@ The app URL must match the deployment, or Shopify will send merchants to the
 wrong host:
 
 1. Set `application_url` and the `auth.redirect_urls` entry in
-   `shopify.app.toml` to the deployed URL.
+   `shopify/shopify.app.scan-to-pay.toml` to the deployed URL.
 2. `shopify app deploy` to publish that configuration.
 
 ## Hosting
