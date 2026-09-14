@@ -2,7 +2,7 @@
 
 client_id = "0ae04134018844df44768c45958efaec"
 name = "Scan To Pay"
-application_url = "https://example.com"
+application_url = "https://qrpayments-1jx1.onrender.com"
 embedded = true
 
 [access_scopes]
@@ -13,7 +13,7 @@ embedded = true
 scopes = "read_orders"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://qrpayments-1jx1.onrender.com/api/auth", "https://qrpayments-1jx1.onrender.com/auth/callback" ]
 
 [webhooks]
 api_version = "2026-10"
