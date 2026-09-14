@@ -120,7 +120,6 @@ export default function SettingsPage() {
               label="Bank name"
               name="bankName"
               defaultValue={current.bankName ?? ""}
-              details="Filled in from your IBAN. Change it if it is wrong."
             />
             <s-button type="submit" variant="primary" disabled={saving}>
               {saving ? "Saving…" : "Save"}
