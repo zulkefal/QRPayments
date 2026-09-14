@@ -16,7 +16,7 @@ docker build -t qrpay-app .
 | `SHOPIFY_API_KEY` | The app's client ID, in `shopify/shopify.app.scan-to-pay.toml` |
 | `SHOPIFY_API_SECRET` | Partner dashboard → app → API credentials |
 | `SHOPIFY_APP_URL` | The public HTTPS URL this deployment serves on |
-| `SCOPES` | `read_orders` |
+| `SCOPES` | empty — the app needs no Admin API scopes |
 
 Migrations run at container start, not at build — the database is not reachable
 while the image is built.

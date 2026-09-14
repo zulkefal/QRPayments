@@ -6,17 +6,18 @@ application_url = "https://qrpayments-1jx1.onrender.com"
 embedded = true
 
 [access_scopes]
-# A shopper-facing QR needs nothing from the Admin API. read_orders is here
-# for order-aware features (dashboard, marking orders paid) and is what a
-# merchant expects a payments app to ask for. Add nothing speculatively —
-# every extra permission on the install screen costs installs.
-scopes = "read_orders"
+# No Admin API scopes. The QR is drawn client-side in the checkout extension,
+# and settings publish to an app-owned metafield, which needs no scope. Order
+# data is protected customer data — requesting read_orders while nothing uses
+# it triggers a data-protection review and reads as an unjustified ask. Add it
+# back only when reconciliation actually reads orders server-side.
+scopes = ""
 
 [auth]
 redirect_urls = [ "https://qrpayments-1jx1.onrender.com/api/auth", "https://qrpayments-1jx1.onrender.com/auth/callback" ]
 
 [webhooks]
-api_version = "2026-10"
+api_version = "2026-07"
 
   [[webhooks.subscriptions]]
   uri = "/webhooks/app/uninstalled"
