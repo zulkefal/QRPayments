@@ -40,43 +40,57 @@ export async function saveSettings(shop, input) {
  * shown a crash.
  */
 export async function publishSettings(admin, settings) {
-  const shopResponse = await admin.graphql(`#graphql
-    query ShopId {
-      shop { id }
-    }
-  `);
-  const { data: shopData } = await shopResponse.json();
-  const ownerId = shopData?.shop?.id;
-  if (!ownerId) return ["Could not identify the shop to publish settings to."];
-
-  const response = await admin.graphql(
-    `#graphql
-      mutation PublishBankSettings($metafields: [MetafieldsSetInput!]!) {
-        metafieldsSet(metafields: $metafields) {
-          metafields { id }
-          userErrors { field message }
-        }
+  // admin.graphql throws when Shopify rejects the call outright (for example an
+  // access-scope refusal), which is exactly the case a merchant most needs
+  // explained. Catch everything so the save can never crash on publish.
+  try {
+    const shopResponse = await admin.graphql(`#graphql
+      query ShopId {
+        shop { id }
       }
-    `,
-    {
-      variables: {
-        metafields: [
-          {
-            ownerId,
-            namespace: METAFIELD_NAMESPACE,
-            key: METAFIELD_KEY,
-            type: "json",
-            value: JSON.stringify({
-              iban: settings.iban,
-              accountTitle: settings.accountTitle,
-              bankName: settings.bankName,
-            }),
-          },
-        ],
-      },
-    }
-  );
+    `);
+    const { data: shopData, errors: shopErrors } = await shopResponse.json();
+    if (shopErrors?.length) return shopErrors.map((e) => e.message);
 
-  const { data } = await response.json();
-  return (data?.metafieldsSet?.userErrors ?? []).map((e) => e.message);
+    const ownerId = shopData?.shop?.id;
+    if (!ownerId) return ["Could not identify the shop to publish settings to."];
+
+    const response = await admin.graphql(
+      `#graphql
+        mutation PublishBankSettings($metafields: [MetafieldsSetInput!]!) {
+          metafieldsSet(metafields: $metafields) {
+            metafields { id }
+            userErrors { field message }
+          }
+        }
+      `,
+      {
+        variables: {
+          metafields: [
+            {
+              ownerId,
+              namespace: METAFIELD_NAMESPACE,
+              key: METAFIELD_KEY,
+              type: "json",
+              value: JSON.stringify({
+                iban: settings.iban,
+                accountTitle: settings.accountTitle,
+                bankName: settings.bankName,
+              }),
+            },
+          ],
+        },
+      }
+    );
+
+    const { data, errors } = await response.json();
+    if (errors?.length) return errors.map((e) => e.message);
+    return (data?.metafieldsSet?.userErrors ?? []).map((e) => e.message);
+  } catch (error) {
+    console.error("publishSettings failed:", error);
+    // GraphqlQueryError carries Shopify's messages in .body; surface those
+    // over the generic wrapper text when present
+    const detail = error?.body?.errors?.map?.((e) => e.message).join(" ");
+    return [detail || error.message || "Could not publish settings to Shopify."];
+  }
 }

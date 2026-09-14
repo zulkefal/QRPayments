@@ -22,11 +22,28 @@ export const action = async ({ request }) => {
   const { admin, session } = await authenticate.admin(request);
   const form = await request.formData();
 
-  const result = await saveSettings(session.shop, {
+  const submitted = {
     iban: form.get("iban"),
     accountTitle: form.get("accountTitle"),
     bankName: form.get("bankName"),
-  });
+  };
+
+  let result;
+  try {
+    result = await saveSettings(session.shop, submitted);
+  } catch (error) {
+    // A database failure (Neon cold start, network blip) must never surface
+    // as a crash page. Tell the merchant plainly and keep what they typed.
+    console.error("saveSettings failed:", error);
+    return {
+      errors: {},
+      saved: false,
+      saveError:
+        "Could not save right now — the database did not respond. Please try again in a moment.",
+      publishErrors: [],
+      settings: submitted,
+    };
+  }
 
   // the extension reads a metafield, so saving is only half the job
   const publishErrors = result.saved
@@ -54,6 +71,10 @@ export default function SettingsPage() {
 
   return (
     <s-page heading="Bank transfer settings">
+      {result?.saveError ? (
+        <s-banner tone="critical">{result.saveError}</s-banner>
+      ) : null}
+
       {result?.saved && !result.publishErrors?.length ? (
         <s-banner tone="success">
           Saved. Shoppers who choose bank transfer will see a QR code for this
