@@ -16,7 +16,7 @@ const [iban, ...amounts] = process.argv.slice(2);
 
 if (!iban) {
   console.error("usage: node examples/generate.js <IBAN> [amount ...]");
-  console.error("  e.g. node examples/generate.js PK51UNIL0109000262456845 100 2500.50");
+  console.error("  e.g. node examples/generate.js PK77UNIL0000000012345678 100 2500.50");
   process.exit(1);
 }
 
