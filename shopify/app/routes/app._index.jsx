@@ -103,7 +103,7 @@ export default function SettingsPage() {
               name="iban"
               defaultValue={current.iban ?? ""}
               error={errors.iban}
-              placeholder="PK51UNIL0109000262456845"
+              placeholder="PK77UNIL0000000012345678"
               details="The account shoppers will send money to."
               required
             />

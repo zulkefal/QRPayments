@@ -34,31 +34,33 @@ function paidOnline() {
   return types.length > 0 && types.every((t) => PAID_ONLINE.has(t));
 }
 
-function Extension() {
-  const editor = shopify.extension?.editor;
+// Sample details for the editor preview when the merchant has not saved any
+// bank account yet, so the block is never a confusing blank in the customizer
+// or during app review.
+const SAMPLE = {
+  iban: "PK77UNIL0000000012345678",
+  accountTitle: "Your business name",
+  bankName: "Your bank",
+};
 
-  // A card/wallet order needs no bank transfer. Hide for shoppers; in the
-  // editor, explain why the block may look empty.
-  if (paidOnline()) {
-    return editor ? (
-      <s-banner heading="Bank transfer" tone="info">
-        This block only appears for orders paid by bank transfer. This order was
-        paid online, so shoppers see nothing here.
-      </s-banner>
-    ) : null;
-  }
+function Extension() {
+  // In the checkout editor, always render a working preview: the merchant
+  // setting up — and a Shopify reviewer examining the extension — must be able
+  // to see the block regardless of payment method or whether a real order
+  // exists. The payment gate below only governs what live shoppers see.
+  const editor = Boolean(shopify.extension?.editor);
+
+  // Live shoppers who already paid online need no bank transfer. In the editor
+  // this gate is skipped so the block previews.
+  if (!editor && paidOnline()) return null;
 
   const entries = shopify.appMetafields?.value ?? [];
-  const settings = readSettings(entries);
+  const saved = readSettings(entries);
 
-  if (!settings) {
-    // shoppers cannot act on this; merchants editing the page can
-    return editor ? (
-      <s-banner heading="Bank transfer" tone="warning">
-        Add your bank account in the app to show a payment code here.
-      </s-banner>
-    ) : null;
-  }
+  if (!saved && !editor) return null; // shoppers can do nothing with a blank
+
+  // fall back to sample details in the editor so the preview always renders
+  const settings = saved ?? SAMPLE;
 
   const total = shopify.cost?.totalAmount?.value;
 
@@ -69,10 +71,13 @@ function Extension() {
   // Whole rupees, rounded down. Bank apps drop the fractional part and UBL
   // errors on it outright, so an order of 2,970.38 is asked for as 2,970 — the
   // shopper sees that same figure below and is never charged above their total.
-  const amount =
+  let amount =
     !wrongCurrency && typeof total?.amount === "number"
       ? toWholeRupees(total.amount.toFixed(2)) || undefined
       : undefined;
+  // the editor has no real order total; show a sample so the amount line and
+  // the encoded value are both demonstrable
+  if (editor && !amount) amount = "1000";
 
   let payload = null;
   try {
@@ -86,6 +91,12 @@ function Extension() {
   return (
     <s-section heading="Pay by bank transfer">
       <s-stack direction="block" gap="base">
+        {editor ? (
+          <s-banner tone="info">
+            Preview. Live shoppers see this only when they choose to pay by bank
+            transfer{saved ? "" : ", once you save your bank account in the app"}.
+          </s-banner>
+        ) : null}
         {/*
           Account details come before the code. A shopper's bank app shows the
           recipient name on the transfer screen, and if it does not match what

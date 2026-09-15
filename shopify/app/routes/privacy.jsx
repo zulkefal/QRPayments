@@ -9,7 +9,7 @@
  * change this page in the same commit.
  */
 const APP_NAME = "Scan To Pay";
-const SUPPORT_EMAIL = "support@example.com"; // TODO: set your real support email
+const SUPPORT_EMAIL = "zulkefal@zulaiz.com";
 const UPDATED = "15 September 2026";
 
 const html = `<!doctype html>
