@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { validateSettings, suggestBank, knownBankCodes } from "../src/index.js";
 
-const IBAN = "PK51UNIL0109000262456845";
+const IBAN = "PK77UNIL0000000012345678";
 
 test("accepts a complete setup", () => {
   const result = validateSettings({ iban: IBAN, accountTitle: "Quecko Pvt Ltd" });
@@ -13,7 +13,7 @@ test("accepts a complete setup", () => {
 
 test("normalizes what the merchant typed", () => {
   const result = validateSettings({
-    iban: "  pk51 unil 0109 0002 6245 6845 ",
+    iban: "  pk77 unil 0000 0000 1234 5678 ",
     accountTitle: "  Quecko Pvt Ltd  ",
   });
   assert.equal(result.settings.iban, IBAN, "spaces and case are forgiven");
@@ -23,7 +23,7 @@ test("normalizes what the merchant typed", () => {
 test("explains what is wrong in the merchant's terms", () => {
   assert.match(validateSettings({}).errors.iban, /Enter the IBAN/);
   assert.match(validateSettings({ iban: "GB82WEST12345698765432" }).errors.iban, /Pakistani IBAN/);
-  assert.match(validateSettings({ iban: "PK52UNIL0109000262456845" }).errors.iban, /mistyped digit/);
+  assert.match(validateSettings({ iban: "PK78UNIL0000000012345678" }).errors.iban, /mistyped digit/);
   assert.match(validateSettings({ iban: IBAN }).errors.accountTitle, /account title/i);
 });
 

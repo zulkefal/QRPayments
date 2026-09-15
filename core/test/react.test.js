@@ -4,12 +4,12 @@ import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { PaymentQR, PaymentQRCode, formatIban } from "../src/react.js";
 
-const IBAN = "PK51UNIL0109000262456845";
+const IBAN = "PK77UNIL0000000012345678";
 const render = (component, props) => renderToStaticMarkup(h(component, props));
 
 test("formats an IBAN into readable groups", () => {
-  assert.equal(formatIban(IBAN), "PK51 UNIL 0109 0002 6245 6845");
-  assert.equal(formatIban("pk51unil0109000262456845"), "PK51 UNIL 0109 0002 6245 6845");
+  assert.equal(formatIban(IBAN), "PK77 UNIL 0000 0000 1234 5678");
+  assert.equal(formatIban("pk77unil0000000012345678"), "PK77 UNIL 0000 0000 1234 5678");
 });
 
 test("renders real svg elements, not injected html", () => {
@@ -27,7 +27,7 @@ test("carries an accessible label", () => {
 
 test("shows the account details as a fallback for apps that cannot scan", () => {
   const html = render(PaymentQR, { iban: IBAN, amount: "2500.00", accountTitle: "Quecko Pvt Ltd", bankName: "UBL" });
-  assert.ok(html.includes("PK51 UNIL 0109 0002 6245 6845"), "IBAN is readable on screen");
+  assert.ok(html.includes("PK77 UNIL 0000 0000 1234 5678"), "IBAN is readable on screen");
   assert.ok(html.includes("Rs 2500.00"));
   assert.ok(html.includes("Quecko Pvt Ltd"));
   assert.ok(html.includes("Copy IBAN"));

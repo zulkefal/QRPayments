@@ -30,7 +30,7 @@ npm test             # runs every workspace's tests
 Generate codes to scan:
 
 ```sh
-npm run qr -- PK51UNIL0109000262456845 100 2500.50
+npm run qr -- PK77UNIL0000000012345678 100 2500.50
 ```
 
 PNGs land in `qr-out/` (gitignored). Record what each bank app does with them

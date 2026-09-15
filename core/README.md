@@ -12,8 +12,8 @@ The core library has no dependencies and makes no network calls.
 ```js
 import { buildPayload } from "@qrpayments/raast-qr";
 
-buildPayload({ iban: "PK51UNIL0109000262456845", amount: "2500.00" });
-// "0002020102120202000424PK51UNIL010900026245684505072500.0007122808202623591004B47F"
+buildPayload({ iban: "PK77UNIL0000000012345678", amount: "2500.00" });
+// "0002020102120202000424PK77UNIL000000001234567805072500.000712280820262359100488FB"
 ```
 
 Render it with any QR library:
@@ -71,7 +71,7 @@ import { PaymentQR } from "@qrpayments/raast-qr/react";
 export default function BankTransfer({ order }) {
   return (
     <PaymentQR
-      iban="PK51UNIL0109000262456845"
+      iban="PK77UNIL0000000012345678"
       amount={order.total}          // pass money as a string: "2500.00"
       accountTitle="Quecko Pvt Ltd"
       bankName="UBL"
@@ -104,7 +104,7 @@ Style it with the `qrpay`, `qrpay__amount`, `qrpay__details`, `qrpay__iban`,
 ## Generating test codes
 
 ```sh
-node examples/generate.js PK51UNIL0109000262456845 100 2500.50
+node examples/generate.js PK77UNIL0000000012345678 100 2500.50
 ```
 
 Writes one PNG per amount into `qr-out/`, named `<bank>-<last4>-<amount>.png`.

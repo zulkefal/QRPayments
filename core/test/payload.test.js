@@ -5,7 +5,7 @@ import {
   isValidIban, normalizeAmount, toWholeRupees, crc16, decodeFields,
 } from "../src/index.js";
 
-const IBAN = "PK51UNIL0109000262456845";
+const IBAN = "PK77UNIL0000000012345678";
 const AT = new Date("2026-08-27T12:00:00");
 
 test("crc16 matches the standard check vector", () => {
@@ -15,9 +15,9 @@ test("crc16 matches the standard check vector", () => {
 test("iban validation", () => {
   assert.ok(isValidIban(IBAN));
   assert.ok(isValidIban("pk51 unil 0109 0002 6245 6845"), "forgives case and spaces");
-  assert.ok(!isValidIban("PK52UNIL0109000262456845"), "rejects bad check digits");
+  assert.ok(!isValidIban("PK78UNIL0000000012345678"), "rejects bad check digits");
   assert.ok(!isValidIban("PK51UNIL010900026245684"), "rejects short");
-  assert.ok(!isValidIban("GB51UNIL0109000262456845"), "rejects non-PK");
+  assert.ok(!isValidIban("GB77UNIL0000000012345678"), "rejects non-PK");
   assert.ok(!isValidIban(null));
 });
 
@@ -37,7 +37,7 @@ test("amount normalization", () => {
 test("builds a known-good priced payload", () => {
   assert.equal(
     buildPayload({ iban: IBAN, amount: 100, now: AT }),
-    "0002020102120202000424PK51UNIL010900026245684505031000712280820262359100414E2"
+    "0002020102120202000424PK77UNIL0000000012345678050310007122808202623591004CD08"
   );
 });
 
@@ -111,8 +111,8 @@ test("reproduces upstream reference vectors", () => {
 test("verified-scanning payload stays byte-stable", () => {
   // this exact payload was scanned successfully by UBL Digital on 2026-08-27
   assert.equal(
-    buildPayload({ iban: "PK51UNIL0109000262456845", amount: 100, now: new Date("2026-08-27T12:00:00") }),
-    "0002020102120202000424PK51UNIL010900026245684505031000712280820262359100414E2"
+    buildPayload({ iban: "PK77UNIL0000000012345678", amount: 100, now: new Date("2026-08-27T12:00:00") }),
+    "0002020102120202000424PK77UNIL0000000012345678050310007122808202623591004CD08"
   );
 });
 
@@ -146,7 +146,7 @@ test("rounding rejects what normalizeAmount rejects", () => {
 
 test("a rounded amount encodes with no decimal point", () => {
   const payload = buildPayload({
-    iban: "PK51UNIL0109000262456845",
+    iban: "PK77UNIL0000000012345678",
     amount: toWholeRupees("2970.38"),
     now: new Date("2026-08-27T12:00:00"),
   });
