@@ -91,10 +91,11 @@ function Extension() {
   return (
     <s-section heading="Pay by bank transfer">
       <s-stack direction="block" gap="base">
-        {editor ? (
+        {editor && !saved ? (
           <s-banner tone="info">
-            Preview. Live shoppers see this only when they choose to pay by bank
-            transfer{saved ? "" : ", once you save your bank account in the app"}.
+            Preview with sample details. Add your bank account in the app to show
+            this to shoppers. In a live store it appears only when a shopper
+            chooses to pay by bank transfer.
           </s-banner>
         ) : null}
         {/*
