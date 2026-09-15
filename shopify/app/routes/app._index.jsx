@@ -15,7 +15,15 @@ import {
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
-  return { settings: await getSettings(session.shop) };
+  // Never let a slow or unreachable database blank the page. If the read fails,
+  // still render the form (empty) so the merchant always has controls and a
+  // recovery path, and show a notice rather than an error screen.
+  try {
+    return { settings: await getSettings(session.shop), loadError: false };
+  } catch (error) {
+    console.error("loader getSettings failed:", error);
+    return { settings: null, loadError: true };
+  }
 };
 
 export const action = async ({ request }) => {
@@ -60,7 +68,7 @@ export const action = async ({ request }) => {
 };
 
 export default function SettingsPage() {
-  const { settings } = useLoaderData();
+  const { settings, loadError } = useLoaderData();
   const result = useActionData();
   const navigation = useNavigation();
 
@@ -71,6 +79,13 @@ export default function SettingsPage() {
 
   return (
     <s-page heading="Bank transfer settings">
+      {loadError ? (
+        <s-banner tone="warning">
+          We could not load your saved details just now. You can still enter and
+          save them below — if the fields look empty, reload the page in a moment.
+        </s-banner>
+      ) : null}
+
       {result?.saveError ? (
         <s-banner tone="critical">{result.saveError}</s-banner>
       ) : null}
@@ -128,10 +143,22 @@ export default function SettingsPage() {
         </Form>
       </s-section>
 
-      <s-section slot="aside" heading="Setup">
+      <s-section slot="aside" heading="How to finish setup">
         <s-paragraph>
-          Saving your account is step one. Two more steps happen in your Shopify
-          settings — see the Setup page.
+          1. Enter your bank account above and click Save.
+        </s-paragraph>
+        <s-paragraph>
+          2. In Settings → Payments → Manual payment methods, add a method such
+          as “Bank Deposit”. This app does not add a payment method itself — it
+          shows a QR code once the shopper chooses your bank transfer method.
+        </s-paragraph>
+        <s-paragraph>
+          3. In Settings → Checkout → Customize, open the Thank you page and add
+          the “Bank transfer QR” block.
+        </s-paragraph>
+        <s-paragraph>
+          Shoppers who choose bank transfer then see a QR code with your account
+          and the exact amount to pay.
         </s-paragraph>
       </s-section>
     </s-page>

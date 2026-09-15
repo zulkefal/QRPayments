@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan To Pay — Screenshot 1</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin:0; font:15px/1.5 -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+    background:#e3e6ea; color:#1a1a1a; }
+  .bar { position:sticky; top:0; z-index:5; display:flex; gap:14px; align-items:center;
+    background:#fff; border-bottom:1px solid #d5d9de; padding:12px 18px; }
+  .bar button { font:inherit; font-weight:600; padding:10px 18px; border-radius:9px; border:0;
+    background:#01411C; color:#fff; cursor:pointer; }
+  .bar span { color:#5c6470; font-size:14px; }
+  .stage { padding:24px; overflow:auto; }
+  .shot-wrap { transform-origin: top left; }
+  .shot { width:1600px; height:900px; background:#f6f6f7; overflow:hidden; outline:1px solid #ccc; }
+
+  .ty { display:grid; grid-template-columns: 1fr 560px; height:100%; }
+  .ty-main { padding:44px 60px; }
+  .ty-side { background:#eef0f2; border-left:1px solid #e1e3e5; padding:70px 56px; }
+  .conf { display:flex; align-items:center; gap:18px; margin-bottom:24px; }
+  .check { width:56px; height:56px; border-radius:50%; border:3px solid #2b6cb0; display:flex;
+    align-items:center; justify-content:center; color:#2b6cb0; font-size:28px; }
+  .conf small { color:#6b7280; font-size:16px; }
+  .conf h2 { margin:2px 0 0; font-size:30px; }
+  .card { border:1px solid #e1e3e5; border-radius:14px; padding:26px 34px; background:#fff; }
+  .card h3 { margin:0 0 14px; font-size:24px; }
+  .row { display:flex; gap:12px; font-size:19px; margin:5px 0; }
+  .row .lbl { color:#6b7280; }
+  .row .val { font-weight:700; }
+  .copy { display:inline-block; margin:12px 0 4px; padding:9px 18px; border:1px solid #c9ccd1;
+    border-radius:9px; font-weight:600; color:#2b6cb0; font-size:17px; }
+  .amt { font-size:24px; font-weight:800; margin:10px 0 12px; }
+  .divider { height:1px; background:#e1e3e5; margin:12px 0; }
+  .scan-note { font-size:18px; margin-bottom:16px; max-width:520px; }
+  .qr-box { width:300px; height:300px; border:1px solid #e1e3e5; border-radius:14px; padding:18px; background:#fff; }
+  .qr-box img { width:100%; height:100%; display:block; }
+  .sum-item { display:flex; align-items:center; gap:18px; margin-bottom:30px; }
+  .sum-thumb { width:74px; height:74px; border-radius:12px; background:#dfe3e8; position:relative; }
+  .sum-thumb b { position:absolute; top:-9px; right:-9px; background:#4b5563; color:#fff;
+    width:26px; height:26px; border-radius:50%; font-size:14px; display:flex; align-items:center; justify-content:center; }
+  .sum-row { display:flex; justify-content:space-between; font-size:19px; margin:10px 0; }
+  .sum-total { display:flex; justify-content:space-between; font-size:24px; font-weight:800; margin-top:14px; }
+  .muted { color:#6b7280; }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <button id="dl">Download PNG (1600&times;900)</button>
+    <span>If download fails, screenshot inside the grey panel outline.</span>
+  </div>
+  <div class="stage">
+    <div class="shot-wrap"><div class="shot" id="shot1">
+      <div class="ty">
+        <div class="ty-main">
+          <div class="conf">
+            <div class="check">&#10003;</div>
+            <div><small>Confirmation #1023</small><h2>Thank you, Ayesha!</h2></div>
+          </div>
+          <div class="card">
+            <h3>Pay by bank transfer</h3>
+            <div class="row"><span class="lbl">Bank name:</span><span class="val">Meezan Bank</span></div>
+            <div class="row"><span class="lbl">Account title:</span><span class="val">Acme Store</span></div>
+            <div class="row"><span class="lbl">IBAN:</span><span class="val">PK77 UNIL 0000 0000 1234 5678</span></div>
+            <span class="copy">Copy IBAN</span>
+            <div class="amt">Rs 759</div>
+            <div class="divider"></div>
+            <div class="scan-note">Scan this with your banking app. The account and amount are filled in for you.</div>
+            <div class="qr-box" data-qr></div>
+          </div>
+        </div>
+        <div class="ty-side">
+          <div class="sum-item">
+            <div class="sum-thumb"><b>1</b></div>
+            <div>The Collection Snowboard: Liquid</div>
+            <div style="margin-left:auto; font-weight:600">Rs 749</div>
+          </div>
+          <div class="sum-row"><span class="muted">Subtotal</span><span>Rs 749</span></div>
+          <div class="sum-row"><span class="muted">Shipping</span><span>Rs 10</span></div>
+          <div class="sum-total"><span>Total</span><span>PKR&nbsp; Rs 759</span></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+<script src="vendor/html2canvas.min.js"></script>
+<script>
+const QR = "11111110010010111100101111111|10000010100101000110001000001|10111010001011101000101011101|10111010001111000111001011101|10111010100010100000101011101|10000010010011000101001000001|11111110101010101010101111111|00000000000001010011000000000|10101010011101010110100010010|01111000111110000011000111110|10110011111101100100101100001|01000100110110000101011001010|01111110100010111000100011000|01100001010100011001010000011|10110110111000011110111011101|01100100001010010101000001001|10010011110111101010111010101|01110000011111000111000101010|10010110000100101111011001101|01110101000101011001101100010|10101111101000111000111110101|00000000111100011001100011010|11111110001101010010101011000|10000010011000010011100011000|10111010110110001001111110011|10111010001001011111000101010|10111010100000000100011110101|10000010001111010100111111000|11111110100101001001011000001".split("|");
+const N = QR.length, Q = 2, size = N + Q*2, unit = 100/size;
+let path = "";
+for (let r=0;r<N;r++) for (let c=0;c<N;c++) if (QR[r][c]==="1")
+  path += `M${(Q+c)*unit} ${(Q+r)*unit}h${unit}v${unit}h${-unit}z`;
+const QRSVG = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#fff"/><path d="${path}" fill="#111"/></svg>`;
+document.querySelector('[data-qr]').innerHTML =
+  `<img src="data:image/svg+xml;base64,${btoa(QRSVG)}" alt="QR code">`;
+
+// fit preview to window width
+function fit(){
+  const scale = Math.min(1, (window.innerWidth - 48) / 1600);
+  const w = document.querySelector('.shot-wrap');
+  w.style.transform = `scale(${scale})`;
+  document.querySelector('.stage').style.height = (900*scale + 48) + 'px';
+}
+window.addEventListener('resize', fit); fit();
+
+document.getElementById('dl').addEventListener('click', async () => {
+  if (typeof html2canvas !== 'function') { alert('Export library did not load. Reload the page.'); return; }
+  const node = document.getElementById('shot1');
+  const wrap = node.closest('.shot-wrap');
+  const t = wrap.style.transform; wrap.style.transform = 'none';
+  try {
+    const canvas = await html2canvas(node, { width:1600, height:900, windowWidth:1600, windowHeight:900, scale:1, backgroundColor:'#f6f6f7', logging:false });
+    await new Promise(res => canvas.toBlob(b => {
+      const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='screenshot-1-1600x900.png'; a.click(); res();
+    }, 'image/png'));
+  } catch(e){ alert('Export failed: '+e.message); }
+  finally { wrap.style.transform = t; }
+});
+</script>
+</body>
+</html>
