@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan To Pay — App Icon</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: #f4f5f7; color: #1a1a1a; display: flex; flex-direction: column;
+    align-items: center; gap: 22px; padding: 32px 16px 64px; }
+  @media (prefers-color-scheme: dark){ body{ background:#16181d; color:#e9eaec; } }
+  h1 { font-size: 1.25rem; margin: 0; }
+  .hint { color: #6b7280; max-width: 34rem; text-align: center; margin: 0; }
+  .stage { background: repeating-conic-gradient(#e7e9ee 0 25%, #f4f5f7 0 50%) 0 0/26px 26px;
+    border-radius: 16px; padding: 22px; }
+  @media (prefers-color-scheme: dark){ .stage{ background: repeating-conic-gradient(#23262e 0 25%, #1b1e25 0 50%) 0 0/26px 26px; } }
+  .icon-box { width: 300px; height: 300px; border-radius: 22.4%; overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,.25); }
+  .icon-box svg { display: block; width: 100%; height: 100%; }
+  .previews { display: flex; align-items: center; gap: 26px; }
+  .previews figure { margin: 0; text-align: center; }
+  .previews .chip { border-radius: 22.4%; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,.2); }
+  .previews .chip svg { display: block; width: 100%; height: 100%; }
+  .previews figcaption { color:#6b7280; font-size:.8rem; margin-top:8px; }
+  button { font: inherit; font-weight: 600; padding: 12px 22px; border-radius: 10px;
+    border: 0; background: #01411C; color: #fff; cursor: pointer; }
+  button:hover { background: #065f2c; }
+</style>
+</head>
+<body>
+  <h1>Scan To Pay — app icon</h1>
+  <p class="hint">A real QR pattern with the name in the centre. 1200&times;1200; the exported
+    PNG is a full square (Shopify masks the corners itself).</p>
+
+  <div class="stage"><div class="icon-box" id="icon"></div></div>
+  <div class="previews" id="previews"></div>
+
+  <button id="download">Download 1200&times;1200 PNG</button>
+  <p class="hint">If the download is blocked, right-click the large icon &rarr; “Save image”.</p>
+
+<script>
+const MATRIX = "1111111010010100101111111,1000001000100101001000001,1011101000001001101011101,1011101010101011101011101,1011101001101101101011101,1000001001100101001000001,1111111010101010101111111,0000000001110001100000000,0010111010001010110001001,1011100100101111011001011,1010111110101010001011111,0110100000110001000100001,1111001000000001111110001,0001110011101111101000111,1010111100111111100010011,0111110110110010100101001,1000111111010101111110001,0000000011001100100011000,1111111001011110101010111,1000001010111101100010001,1011101010110110111111100,1011101001100010010110010,1011101011011010101010101,1000001000110111001010010,1111111000001011000100011".split(",");
+const N = MATRIX.length;              // 25
+const SVGSIZE = 1200;
+const QUIET = 3;                      // quiet-zone modules around the code
+const cell = SVGSIZE / (N + QUIET * 2);
+const px = (m) => (QUIET + m) * cell;
+
+// clear a centred square window (in modules) so the label sits on clean white
+const winModules = 11;
+const winStart = Math.floor((N - winModules) / 2);
+const winEnd = winStart + winModules;
+const inWindow = (r, c) =>
+  r >= winStart && r < winEnd && c >= winStart && c < winEnd;
+
+let rects = "";
+for (let r = 0; r < N; r++) {
+  for (let c = 0; c < N; c++) {
+    if (MATRIX[r][c] !== "1") continue;
+    if (inWindow(r, c)) continue;                   // leave room for the label
+    const g = cell * 0.92, off = (cell - g) / 2;
+    rects += `<rect x="${px(c)+off}" y="${px(r)+off}" width="${g}" height="${g}" rx="${g*0.3}" fill="#fff"/>`;
+  }
+}
+
+// centre badge: a clean rounded-square white plate, smaller than the cleared
+// window so green shows around it, with the name centred as one group.
+const pad = cell * 1.4;
+const plateX = px(winStart) + pad;
+const plateY = px(winStart) + pad;
+const plateSize = cell * winModules - pad * 2;
+const cx = plateX + plateSize / 2;
+const cy = plateY + plateSize / 2;
+const fs = plateSize * 0.2;                          // font size
+const lh = fs * 1.15;                                // line height
+
+const SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SVGSIZE} ${SVGSIZE}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d6b39"/>
+      <stop offset="1" stop-color="#01411C"/>
+    </linearGradient>
+  </defs>
+  <rect width="${SVGSIZE}" height="${SVGSIZE}" fill="url(#bg)"/>
+  ${rects}
+  <rect x="${plateX}" y="${plateY}" width="${plateSize}" height="${plateSize}"
+        rx="${plateSize*0.22}" fill="#fff"/>
+  <g font-family="'Helvetica Neue', Arial, system-ui, sans-serif" font-weight="800"
+     fill="#01411C" text-anchor="middle" letter-spacing="0.5">
+    <text x="${cx}" y="${cy - lh}"      dominant-baseline="central" font-size="${fs}">SCAN</text>
+    <text x="${cx}" y="${cy}"           dominant-baseline="central" font-size="${fs}">TO</text>
+    <text x="${cx}" y="${cy + lh}"      dominant-baseline="central" font-size="${fs}">PAY</text>
+  </g>
+</svg>`;
+
+document.getElementById('icon').innerHTML = SVG;
+const prev = document.getElementById('previews');
+for (const s of [128, 64, 48]) {
+  const fig = document.createElement('figure');
+  fig.innerHTML = `<div class="chip" style="width:${s}px;height:${s}px">${SVG}</div><figcaption>${s}px</figcaption>`;
+  prev.appendChild(fig);
+}
+document.getElementById('download').addEventListener('click', () => {
+  const blob = new Blob([SVG], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas'); c.width = SVGSIZE; c.height = SVGSIZE;
+    c.getContext('2d').drawImage(img, 0, 0, SVGSIZE, SVGSIZE);
+    URL.revokeObjectURL(url);
+    c.toBlob(b => { const a=document.createElement('a'); a.href=URL.createObjectURL(b);
+      a.download='scan-to-pay-icon-1200.png'; a.click(); }, 'image/png');
+  };
+  img.src = url;
+});
+</script>
+</body>
+</html>

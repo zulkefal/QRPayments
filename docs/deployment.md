@@ -66,3 +66,23 @@ DATABASE_URL="postgresql://postgres:devpass@localhost:5432/postgres"
 npx prisma migrate dev
 shopify app dev
 ```
+
+
+## Keeping a free host awake
+
+A free Render service sleeps after ~15 minutes idle and shows a cold-start
+screen for ~50s on the next request. The shopper-facing QR does not depend on
+the server, but the admin settings page and app review do, so the server must
+stay warm.
+
+Two ways, use either (or both):
+
+1. **Uptime monitor (recommended, most reliable).** Create a free monitor at
+   uptimerobot.com or cron-job.org pointing at `/healthz`, interval 5 minutes.
+   Purpose-built and fires on time.
+2. **GitHub Actions** — `.github/workflows/keep-alive.yml` pings every 10
+   minutes. In-repo and free, but GitHub throttles scheduled runs and disables
+   them after 60 days with no commits, so treat it as a backup.
+
+The better long-term fix is a paid instance (no sleep); the keep-alive is for
+the free tier.

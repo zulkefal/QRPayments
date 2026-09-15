@@ -112,8 +112,8 @@ export default function SettingsPage() {
               name="accountTitle"
               defaultValue={current.accountTitle ?? ""}
               error={errors.accountTitle}
-              placeholder="Your registered business name"
-              details="Shown on the shopper's transfer screen. Enter it exactly as your bank shows it — if it does not match your store name, shoppers abandon the payment."
+              placeholder="Enter your account title"
+              details="Shown on the shopper's transfer screen so they can confirm who they are paying. Enter it exactly as your bank shows it."
               required
             />
             <s-text-field

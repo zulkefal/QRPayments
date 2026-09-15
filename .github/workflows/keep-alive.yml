@@ -1,0 +1,29 @@
+# Keeps the free Render web service awake so merchants and app reviewers never
+# hit the ~50s cold-start screen. Render sleeps a free service after 15 minutes
+# of no inbound traffic; this pings the health check often enough to prevent it.
+#
+# GitHub's scheduled runs are best-effort and can be delayed, so this is the
+# backup. A dedicated uptime monitor (UptimeRobot / cron-job.org) hitting the
+# same URL every 5 minutes is more reliable — see docs/deployment.md.
+#
+# Note: GitHub disables scheduled workflows after 60 days with no repo commits.
+name: keep-alive
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # every 10 minutes
+  workflow_dispatch:          # lets you run it manually to test
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health check
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 \
+            https://qrpayments-1jx1.onrender.com/healthz)
+          echo "health check returned $code"
+          # a waking service may briefly 5xx; only fail on a hard error
+          if [ "$code" = "000" ]; then
+            echo "no response from host"; exit 1
+          fi
