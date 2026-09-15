@@ -11,13 +11,49 @@ export default async () => {
   render(<Extension />, document.body);
 };
 
+// Payment types where the shopper has already paid electronically — showing
+// bank-transfer instructions to them is wrong. Everything else (manualPayment,
+// local, paymentOnDelivery, …) is a "pay us directly" method the QR is for.
+const PAID_ONLINE = new Set([
+  "creditCard",
+  "wallet",
+  "offsite",
+  "customOnsite",
+  "redeemable",
+]);
+
+/**
+ * True only when we can positively see the order was paid online. Unknown or
+ * empty (which can happen on the thank-you page) counts as false: hiding
+ * payment instructions from a bank-transfer shopper who still owes money is far
+ * worse than briefly showing them to a card shopper, so we only hide when sure.
+ */
+function paidOnline() {
+  const selected = shopify.selectedPaymentOptions?.value ?? [];
+  const types = selected.map((o) => o?.type).filter(Boolean);
+  return types.length > 0 && types.every((t) => PAID_ONLINE.has(t));
+}
+
 function Extension() {
+  const editor = shopify.extension?.editor;
+
+  // A card/wallet order needs no bank transfer. Hide for shoppers; in the
+  // editor, explain why the block may look empty.
+  if (paidOnline()) {
+    return editor ? (
+      <s-banner heading="Bank transfer" tone="info">
+        This block only appears for orders paid by bank transfer. This order was
+        paid online, so shoppers see nothing here.
+      </s-banner>
+    ) : null;
+  }
+
   const entries = shopify.appMetafields?.value ?? [];
   const settings = readSettings(entries);
 
   if (!settings) {
     // shoppers cannot act on this; merchants editing the page can
-    return shopify.extension?.editor ? (
+    return editor ? (
       <s-banner heading="Bank transfer" tone="warning">
         Add your bank account in the app to show a payment code here.
       </s-banner>
